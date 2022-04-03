@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <script crossorigin src="https://unpkg.com/react@18/umd/react.development.js"></script>
+  <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+  <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+  <title>Counting Game</title>
+
+  <style>
+    #app {
+      text-align: center;
+      height: 100vh;
+      display: grid;
+      place-items:center;
+    }
+
+    #app button {
+      display: block;
+      margin: 1rem auto 0;
+    }
+
+    #app #big {
+      font-size: 3rem;
+      font-weight: bold;
+      margin-bottom: 0.5em;
+    }
+
+    #app .score {
+      margin-top: 1rem;
+      font-size: 1.125rem;
+      font-style: italic;
+    }
+
+    #app #guessesLeft {
+      margin-top: 1rem;
+      font-size: 1.125rem;
+      font-style: italic;
+    }
+
+    #app .incorrect {
+      color: red;
+    }
+
+    .hidden {
+      display: none;
+    }
+
+  </style>
+</head>
+<body>
+  <div id="app"></div>
+
+  <script type="text/babel">
+    const container = document.getElementById('app')
+    function App() {
+      const [state, setState] = React.useState({
+        num1: Math.ceil(Math.random() * 10),
+        num2: Math.ceil(Math.random() * 10),
+        guess: '',
+        score: 0,
+        incorrect : false,
+        failCount: 0,
+        guessesLeft: 3
+      })
+
+      function updateGuess(event) {
+        setState({
+          ...state,
+          guess: event.target.value
+        })
+      }
+
+      function checkAnswer(event) {
+        if(event.key === "Enter") {
+          if(state.num1 + state.num2 === parseInt(state.guess)) {
+            setState({
+              num1 : Math.ceil(Math.random() * 10),
+              num2 : Math.ceil(Math.random() * 10),
+              guess: '',
+              score: state.score + 1,
+              incorrect: false,
+              failCount: state.failCount,
+              guessesLeft: state.guessesLeft
+            })
+          } else {
+            setState({
+              ...state,
+              guess: '',
+              score: state.score,
+              incorrect: true,
+              failCount: state.failCount + 1,
+              guessesLeft: state.guessesLeft - 1
+            })
+          }
+        }
+      }
+
+      if(state.score === 10) {
+        return (
+          <h1>You won! :)</h1>
+        )
+      }
+
+      if(state.failCount === 3) {
+        return (
+          <h1>Game Over :/</h1>
+        )
+      }
+
+
+      return (
+        <div>
+          <div id="big" className={state.incorrect ? 'incorrect' : ''} >{state.num1} + {state.num2}</div>
+          <input onKeyPress={checkAnswer} onChange={updateGuess} type="number" value={state.guess} />
+          <div className="score"><strong>Score:</strong> {state.score}</div>
+          <small>Get 10 correct to win the game!<br /> Get 3 wrong and you lose!</small>
+          <div id="guessesLeft" className={state.guessesLeft < 3 ? "" : "hidden"}><strong>Guesses left:</strong> {state.guessesLeft}</div>
+        </div>
+      )
+    }
+
+    const root = ReactDOM.createRoot(container);
+    root.render(<App tab="home" />);
+  </script>
+</body>
+</html>
