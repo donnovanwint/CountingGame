@@ -114,7 +114,7 @@
       return (
         <div>
           <div id="big" className={state.incorrect ? 'incorrect' : ''} >{state.num1} + {state.num2}</div>
-          <input onKeyPress={checkAnswer} onChange={updateGuess} type="number" value={state.guess} />
+          <input autoFocus={true} onKeyPress={checkAnswer} onChange={updateGuess} type="number" value={state.guess} />
           <div className="score"><strong>Score:</strong> {state.score}</div>
           <small>Get 10 correct to win the game!<br /> Get 3 wrong and you lose!</small>
           <div id="guessesLeft" className={state.guessesLeft < 3 ? "" : "hidden"}><strong>Guesses left:</strong> {state.guessesLeft}</div>
